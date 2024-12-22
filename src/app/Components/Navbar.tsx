@@ -1,43 +1,102 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Button, IconButton, Badge } from "@mui/material";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import SettingsIcon from "@mui/icons-material/Settings";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  InputBase,
+  IconButton,
+  Button,
+} from "@mui/material";
+import {
+  Search as SearchIcon,
+  Book as BookIcon,
+  Favorite as FavoriteIcon,
+  ShoppingCart as ShoppingCartIcon,
+  AccountCircle as AccountCircleIcon,
+  Home as HomeIcon,
+  List as ListIcon,
+  LocalOffer as LocalOfferIcon,
+  Comment as CommentIcon,
+  Article as ArticleIcon,
+} from "@mui/icons-material";
+import Link from "next/link";
 
-const Navbar = () => {
+const Header = () => {
   return (
-    <AppBar position="static" className="bg-blue-500">
-      <Toolbar className="flex justify-between items-center">
-        {/* سمت راست: لوگو و اسم */}
-        <div className="flex items-center">
-          <img src="/logo.png" alt="Logo" className="w-8 h-8 mr-2" />
-          <Typography variant="h6" className="text-white font-bold">
-            فروشگاه آنلاین میوه بازار
-          </Typography>
-        </div>
+    <>
+      {/* بخش اول هدر */}
+      <AppBar position="static" color="inherit" elevation={0}>
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          {/* لوگو */}
+          <Box display="flex" alignItems="center">
+            <BookIcon color="success" sx={{ mr: 1 }} />
+            <Typography variant="h5" fontWeight="bold" color="text.primary">
+              کتابخانه
+            </Typography>
+          </Box>
 
-        {/* سمت چپ: سبد خرید و مدیریت */}
-        <div className="flex items-center">
-          {/* سبد خرید */}
-          <IconButton color="inherit" className="mr-4">
-            <Badge>
-              <ShoppingCartIcon />
-            </Badge>
-          </IconButton>
-
-          {/* دکمه مدیریت */}
-          <Button
-            variant="outlined"
-            color="inherit"
-            startIcon={<SettingsIcon />}
-            className="hidden md:block"
-            href="Admin-login"
+          {/* فرم جستجو */}
+          <Box
+            component="form"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              width: "50rem",
+              height: "3rem",
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              overflow: "hidden",
+              backgroundColor: "#fff",
+            }}
           >
-            مدیریت
+            <InputBase
+              placeholder="جستجو کنید"
+              sx={{ flex: 1, px: 2 }}
+            />
+            <IconButton type="submit" sx={{ p: 1 }}>
+              <SearchIcon />
+            </IconButton>
+          </Box>
+
+          {/* آیکون‌ها */}
+          <Box display="flex" alignItems="center">
+            <Link href={`/Cart`}>
+            <IconButton color="default">
+              <ShoppingCartIcon />
+            </IconButton>
+            </Link>
+            <Link href={`/admin-login`}>
+            <IconButton color="default">
+              <AccountCircleIcon />
+            </IconButton>
+            </Link>
+          </Box>
+        </Toolbar>
+      </AppBar>
+
+      {/* بخش دوم هدر (منوی ناوبری) */}
+      <AppBar position="static" color="success">
+        <Toolbar sx={{ justifyContent: "center" }}>
+          <Button color="inherit" href="#home">
+            خانه
           </Button>
-        </div>
-      </Toolbar>
-    </AppBar>
+          <Button color="inherit" href="#featured">
+            ویژه
+          </Button>
+          <Button color="inherit" href="#arrivals">
+            جدیدها
+          </Button>
+          <Button color="inherit" href="#reviews">
+            نظرات
+          </Button>
+          <Button color="inherit" href="#blogs">
+            وبلاگ
+          </Button>
+        </Toolbar>
+      </AppBar>
+    </>
   );
 };
 
-export default Navbar;
+export default Header;

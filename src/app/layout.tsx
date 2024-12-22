@@ -3,16 +3,10 @@ import "./globals.css";
 import ClientProvider from "./ClientProvider"; // کامپوننت کلاینتی
 import { JSX, ReactNode } from "react";
 
-// تعریف فونت‌ها
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
+// تعریف فونت از فولدر public
+const IRANSans = localFont({
+  src: "/fonts/IRANSansWeb.woff", // مسیر به فایل داخل public
+  variable: "--font-iran-sans",
   weight: "100 900",
 });
 
@@ -30,9 +24,11 @@ interface RootLayoutProps {
 // کامپوننت RootLayout
 export default function RootLayout({ children }: RootLayoutProps): JSX.Element {
   return (
-    <html dir="rtl">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ClientProvider>{children}</ClientProvider>
+    <html dir="rtl" lang="fa">
+      <body className={`${IRANSans.variable} antialiased`}>
+        <ClientProvider>
+          {children}
+          </ClientProvider>
       </body>
     </html>
   );

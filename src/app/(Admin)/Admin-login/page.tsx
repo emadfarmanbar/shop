@@ -1,24 +1,33 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, TextField, Box, Typography, Container, Grid, Paper } from "@mui/material";
-import { useRouter } from "next/navigation";
-import axios from "axios";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  TextField,
+  Typography,
+} from "@mui/material";
+import axiosInstance from "../../utils/axiosInstance"; // مسیر درست به فایل axios خود را وارد کنید
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation"; // اصلاح: استفاده از useRouter از next/navigation
+import Image from "next/image";
 
 const AdminLoginPage = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const router = useRouter(); // استفاده از useRouter از next/navigation برای هدایت
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null); // پاک کردن خطا قبل از درخواست جدید
 
     try {
-      const response = await axios.post("http://localhost:8000/api/auth/login", {
+      const response = await axiosInstance.post("/auth/login", {
         username,
         password,
       });
@@ -26,11 +35,17 @@ const AdminLoginPage = () => {
       if (response.data.status === "success") {
         // ذخیره توکن‌ها در کوکی
         const { accessToken, refreshToken } = response.data.token;
-        Cookies.set("accessToken", accessToken, { secure: true, sameSite: "strict" });
-        Cookies.set("refreshToken", refreshToken, { secure: true, sameSite: "strict" });
+        Cookies.set("accessToken", accessToken, {
+          secure: true,
+          sameSite: "strict",
+        });
+        Cookies.set("refreshToken", refreshToken, {
+          secure: true,
+          sameSite: "strict",
+        });
 
-        // ریدایرکت به داشبورد بعد از لاگین موفق
-        router.push("/admin/dashboard");
+        // هدایت به داشبورد
+        router.push("/Admin-Dashboard"); // تغییر به مسیر دلخواه شما
       } else {
         setError("نام کاربری یا کلمه عبور اشتباه است.");
       }
@@ -43,75 +58,95 @@ const AdminLoginPage = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-      <Paper
-        sx={{
-          padding: 4,
-          borderRadius: 2,
-          boxShadow: 3,
-          width: "100%",
-          maxWidth: 400,
-          background: "#f4f6f8",
-        }}
+    <Box className="flex items-center justify-center h-screen bg-gray-300 shadow-lg">
+      <Box className="w-5/12">
+        <Image 
+        src="/img/Book.jpg"
+        width={600}
+        height={700}
+        alt="کتابخانه"
+        />
+      </Box>
+      <Box
+        component="form"
+        onSubmit={handleLogin}
+        className="bg-white shadow-md rounded-md p-8 w-5/12 h-4/6"
       >
-        <Typography variant="h4" align="center" sx={{ marginBottom: 3, color: "#1976d2" }}>
-          ورود به پنل مدیریت
+        <Typography variant="h5" align="center" className="uppercase mb-4">
+          ورود
         </Typography>
 
         {error && (
-          <Typography variant="body2" color="error" align="center" sx={{ marginBottom: 2 }}>
+          <Typography
+            variant="body2"
+            color="error"
+            align="center"
+            className="mb-2"
+          >
             {error}
           </Typography>
         )}
 
-        <Box component="form" onSubmit={handleLogin} sx={{ display: "flex", flexDirection: "column" }}>
-          <TextField
-            label="نام کاربری"
-            variant="outlined"
-            fullWidth
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            sx={{ marginBottom: 2 }}
-            required
-          />
-          <TextField
-            label="کلمه عبور"
-            type="password"
-            variant="outlined"
-            fullWidth
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            sx={{ marginBottom: 2 }}
-            required
-          />
+        <Typography variant="body1" className="block mb-2">
+          نام کاربری
+        </Typography>
+        <TextField
+          type="text"
+          placeholder="نام کاربری خود را وارد کنید"
+          fullWidth
+          variant="outlined"
+          className="mb-4"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
 
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            disabled={loading}
-            sx={{
-              padding: "10px",
-              background: "#1976d2",
-              "&:hover": {
-                backgroundColor: "#1565c0",
-              },
-            }}
-          >
-            {loading ? "در حال ورود..." : "ورود"}
-          </Button>
-        </Box>
+        <Typography variant="body1" className="block mb-2">
+          رمز عبور
+        </Typography>
+        <TextField
+          type="password"
+          placeholder="رمز عبور خود را وارد کنید"
+          fullWidth
+          variant="outlined"
+          className="mb-4"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
-        <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
-          <Grid item>
-            <Typography variant="body2" color="text.secondary">
-              حساب کاربری ندارید؟
-            </Typography>
-          </Grid>
-        </Grid>
-      </Paper>
-    </Container>
+        <FormControlLabel
+          control={<Checkbox />}
+          label="به خاطر سپردن"
+          className="mb-4"
+        />
+
+        <Button
+          type="submit"
+          variant="contained"
+          color="success"
+          fullWidth
+          className="py-2"
+          disabled={loading}
+        >
+          {loading ? "در حال ورود..." : "ورود"}
+        </Button>
+
+        <Typography variant="body2" className="text-gray-500 mt-6 text-center">
+          رمز خود را فراموش کرده‌اید؟{" "}
+          <a href="#" className="text-green-500 underline">
+            اینجا کلیک کنید
+          </a>
+        </Typography>
+
+        <Typography variant="body2" className="text-gray-500 mt-6 text-center">
+          ثبت نام نکرده‌اید؟{" "}
+          <a href="#" className="text-green-500 underline">
+            ساخت حساب
+          </a>
+        </Typography>
+      </Box>
+    </Box>
   );
 };
 

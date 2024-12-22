@@ -11,7 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^6.1.10",
+    "@mui/icons-material": "^6.2.1",
     "@mui/material": "^6.1.10",
     "@mui/styles": "^6.1.10",
     "axios": "^1.7.9",
@@ -20,8 +20,10 @@
     "react": "^19.0.0",
     "react-confirm-alert": "^3.0.6",
     "react-dom": "^19.0.0",
+    "react-icons": "^5.4.0",
     "stylis": "^4.3.4",
-    "stylis-plugin-rtl": "^2.1.1"
+    "stylis-plugin-rtl": "^2.1.1",
+    "swiper": "^11.1.15"
   },
   "devDependencies": {
     "@types/node": "^20",
