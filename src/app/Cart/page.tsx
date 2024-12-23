@@ -95,81 +95,84 @@ const CartPage: React.FC = () => {
   if (loading) return <div>در حال بارگذاری...</div>;
 
   return (
-    <div className="p-4">
-      <Typography variant="h4" className="text-center font-bold mb-6 text-green-600">
-        سبد خرید شما
-      </Typography>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 ">
+      <div className="p-6 bg-white rounded-lg shadow-lg w-full max-w-lg">
+        <Typography variant="h4" className="text-center font-bold mb-4 text-green-600">
+          سبد خرید شما
+        </Typography>
 
-      {/* بررسی خالی بودن سبد خرید */}
-      {cart.length === 0 ? (
-        <Paper className="p-6 text-center shadow-md bg-gray-50">
-          <MdShoppingCart size={60} className="text-gray-400 mx-auto mb-4" />
-          <Typography variant="h6" className="text-gray-500">
-            سبد خرید شما خالی است
-          </Typography>
-          <Button variant="contained" color="primary" className="mt-4">
-            ادامه خرید
-          </Button>
-        </Paper>
-      ) : (
-        <>
-          {products.map((product) => {
-            return (
-              <div
-                key={product.product}
-                className="border-b border-gray-300 py-4 flex justify-between items-center"
-              >
-                <div className="flex items-center">
-                  <img
-                    src={`http://localhost:8000/images/products/thumbnails/${product.details?.thumbnail}`}
-                    alt={product.details?.name}
-                    className="h-24 w-24 object-cover rounded-lg mr-4"
-                  />
-                  <div>
-                    <Typography variant="h6">{product.details?.name}</Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {product.details?.description}
-                    </Typography>
-                  </div>
-                </div>
-                <div className="text-lg font-semibold">
-                  {product.count} × {product.details?.price.toLocaleString() || "قیمت در دسترس نیست"} تومان
-                </div>
-                <Button
-                  onClick={() => handleOpenModal(product.product)}
-                  variant="outlined"
-                  color="secondary"
-                  startIcon={<MdDeleteForever />}
+        {/* بررسی خالی بودن سبد خرید */}
+        {cart.length === 0 ? (
+          <Paper className="p-6 text-center shadow-md bg-gray-50">
+            <MdShoppingCart size={50} className="text-gray-400 mx-auto mb-4" />
+            <Typography variant="h6" className="text-gray-500">
+              سبد خرید شما خالی است
+            </Typography>
+            <Button variant="contained" color="success" className="mt-4">
+              ادامه خرید
+            </Button>
+          </Paper>
+        ) : (
+          <>
+            {products.map((product) => {
+              return (
+                <div
+                  key={product.product}
+                  className="border-b border-gray-300 py-3 flex justify-between items-center"
                 >
-                  حذف
-                </Button>
-              </div>
-            );
-          })}
-          <Typography variant="h6" className="mt-4 text-right font-semibold">
-            مجموع: {totalPrice.toLocaleString()} تومان
-          </Typography>
-          <Button variant="contained" color="primary" fullWidth className="mt-4" onClick={handleCheckout}>
-            نهایی کردن سفارش
-          </Button>
-        </>
-      )}
+                  <div className="flex items-center p-3">
+                    <img
+                      src={`http://localhost:8000/images/products/thumbnails/${product.details?.thumbnail}`}
+                      alt={product.details?.name}
+                      className="h-20 w-20 object-cover rounded-lg mr-4"
+                    />
+                    <div className="mr-3">
+                      <Typography variant="h6" className="text-green-700">{product.details?.name}</Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {product.details?.description}
+                      </Typography>
+                    </div>
+                  </div>
+                  <div className="text-lg font-semibold text-green-600">
+                    {product.count} × {product.details?.price.toLocaleString() || "قیمت در دسترس نیست"} تومان
+                  </div>
+                  <Button
+                    onClick={() => handleOpenModal(product.product)}
+                    variant="outlined"
+                    color="error"
+                    startIcon={<MdDeleteForever />}
+                    className="text-red-600 hover:bg-red-100"
+                  >
+                    حذف
+                  </Button>
+                </div>
+              );
+            })}
+            <Typography variant="h6" className="mt-4 text-right font-semibold text-green-700">
+              مجموع: {totalPrice.toLocaleString()} تومان
+            </Typography>
+            <Button variant="contained" color="success" fullWidth className="mt-4" onClick={handleCheckout}>
+              نهایی کردن سفارش
+            </Button>
+          </>
+        )}
 
-      {/* مودال تایید حذف */}
-      <Dialog open={openModal} onClose={handleCloseModal}>
-        <DialogTitle>آیا مطمئن هستید؟</DialogTitle>
-        <DialogContent>
-          <Typography>آیا می‌خواهید این محصول را از سبد خرید خود حذف کنید؟</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} color="primary">
-            انصراف
-          </Button>
-          <Button onClick={() => productToRemove && removeFromCart(productToRemove)} color="secondary">
-            حذف
-          </Button>
-        </DialogActions>
-      </Dialog>
+        {/* مودال تایید حذف */}
+        <Dialog open={openModal} onClose={handleCloseModal}>
+          <DialogTitle className="text-green-700">آیا مطمئن هستید؟</DialogTitle>
+          <DialogContent>
+            <Typography>آیا می‌خواهید این محصول را از سبد خرید خود حذف کنید؟</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal} color="primary">
+              انصراف
+            </Button>
+            <Button onClick={() => productToRemove && removeFromCart(productToRemove)} color="secondary">
+              حذف
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </div>
   );
 };

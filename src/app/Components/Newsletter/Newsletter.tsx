@@ -1,7 +1,7 @@
 "use client"; // Ensures this component runs on the client-side
 
 import React, { useState } from "react";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, Typography } from "@mui/material";
 import { FaEnvelope } from "react-icons/fa"; // Importing an envelope icon from react-icons
 
 const Newsletter: React.FC = () => {
@@ -27,12 +27,13 @@ const Newsletter: React.FC = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         padding: "5rem 0",
+        textAlign: "center",
       }}
     >
-      <form onSubmit={handleSubmit} className="max-w-xl mr-10 text-center">
-        <h3 className="text-white text-2xl font-normal pb-4">
+      <form onSubmit={handleSubmit} className="max-w-lg m-auto">
+        <Typography variant="h4" component="h3" className="text-white font-bold mb-4">
           برای آخرین به روز رسانی مشترک شوید
-        </h3>
+        </Typography>
 
         {/* Email input with MUI TextField */}
         <TextField
@@ -47,6 +48,15 @@ const Newsletter: React.FC = () => {
               borderRadius: "8px",
               backgroundColor: "#fff",
             },
+            "& .MuiInputLabel-root": {
+              color: "#4caf50", // Set label color to green
+            },
+            "& .MuiOutlinedInput-input": {
+              color: "#333", // Set input text color to dark gray for contrast
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#4caf50", // Set border color to green
+            },
           }}
         />
 
@@ -54,14 +64,17 @@ const Newsletter: React.FC = () => {
         <Button
           type="submit"
           variant="contained"
-          color="primary"
-          className="btn mt-10"
+          color="success"
+          className="btn mt-4"
           sx={{
             padding: "0.75rem 2rem",
             fontSize: "1.6rem",
             textTransform: "none",
             borderRadius: "8px",
-            marginTop: "10px",
+            backgroundColor: "#4caf50", // Set background to green
+            "&:hover": {
+              backgroundColor: "#388e3c", // Darker green on hover
+            },
           }}
         >
           عضویت
@@ -70,7 +83,7 @@ const Newsletter: React.FC = () => {
 
       {/* Optional Icon */}
       <div className="absolute bottom-0 left-0 right-0 text-center pb-8">
-        <FaEnvelope className="text-white text-4xl" />
+        <FaEnvelope className="text-white text-5xl" />
       </div>
     </Box>
   );

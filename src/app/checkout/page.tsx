@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, TextField, Typography, Paper } from "@mui/material";
+import { FaShoppingCart, FaUserAlt, FaLock, FaPhoneAlt, FaAddressBook } from "react-icons/fa"; // استفاده از آیکون‌های React
 
 const CheckoutPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -81,26 +82,83 @@ const CheckoutPage: React.FC = () => {
   };
 
   return (
-    <div className="p-4">
-      <Typography variant="h4" className="text-center mb-6">
-        تکمیل اطلاعات سفارش
-      </Typography>
-      <form className="flex flex-col gap-4">
-        <TextField label="نام" name="firstname" onChange={handleChange} fullWidth />
-        <TextField label="نام خانوادگی" name="lastname" onChange={handleChange} fullWidth />
-        <TextField label="نام کاربری" name="username" onChange={handleChange} fullWidth />
-        <TextField label="رمز عبور" name="password" type="password" onChange={handleChange} fullWidth />
-        <TextField label="شماره تلفن" name="phoneNumber" onChange={handleChange} fullWidth />
-        <TextField label="آدرس" name="address" onChange={handleChange} fullWidth />
-        <Button variant="contained" color="primary" onClick={handleSubmit} disabled={loading}>
-          {loading ? "در حال ارسال..." : "ثبت سفارش"}
-        </Button>
-      </form>
-      {success && (
-        <Typography variant="body1" color="green" className="mt-4">
-          سفارش شما با موفقیت ثبت شد!
+    <div className="flex justify-center items-center min-h-screen bg-green-50 p-4">
+      <Paper className="p-6 bg-white shadow-lg rounded-lg w-full max-w-md">
+        <Typography variant="h4" className="text-center text-green-600 font-semibold mb-6">
+          تکمیل اطلاعات سفارش
         </Typography>
-      )}
+        <form className="flex flex-col gap-4">
+          <TextField
+            label="نام"
+            name="firstname"
+            onChange={handleChange}
+            fullWidth
+            InputProps={{
+              startAdornment: <FaUserAlt className="text-green-600 mr-2" />,
+            }}
+          />
+          <TextField
+            label="نام خانوادگی"
+            name="lastname"
+            onChange={handleChange}
+            fullWidth
+            InputProps={{
+              startAdornment: <FaUserAlt className="text-green-600 mr-2" />,
+            }}
+          />
+          <TextField
+            label="نام کاربری"
+            name="username"
+            onChange={handleChange}
+            fullWidth
+            InputProps={{
+              startAdornment: <FaUserAlt className="text-green-600 mr-2" />,
+            }}
+          />
+          <TextField
+            label="رمز عبور"
+            name="password"
+            type="password"
+            onChange={handleChange}
+            fullWidth
+            InputProps={{
+              startAdornment: <FaLock className="text-green-600 mr-2" />,
+            }}
+          />
+          <TextField
+            label="شماره تلفن"
+            name="phoneNumber"
+            onChange={handleChange}
+            fullWidth
+            InputProps={{
+              startAdornment: <FaPhoneAlt className="text-green-600 mr-2" />,
+            }}
+          />
+          <TextField
+            label="آدرس"
+            name="address"
+            onChange={handleChange}
+            fullWidth
+            InputProps={{
+              startAdornment: <FaAddressBook className="text-green-600 mr-2" />,
+            }}
+          />
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handleSubmit}
+            disabled={loading}
+            className="mt-4"
+          >
+            {loading ? "در حال ارسال..." : "ثبت سفارش"}
+          </Button>
+        </form>
+        {success && (
+          <Typography variant="body1" color="green" className="mt-4 text-center">
+            سفارش شما با موفقیت ثبت شد!
+          </Typography>
+        )}
+      </Paper>
     </div>
   );
 };

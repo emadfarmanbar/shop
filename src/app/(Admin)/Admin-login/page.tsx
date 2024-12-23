@@ -13,12 +13,14 @@ import axiosInstance from "../../utils/axiosInstance"; // مسیر درست به
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation"; // اصلاح: استفاده از useRouter از next/navigation
 import Image from "next/image";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // برای آیکون نشان دادن/مخفی کردن رمز عبور
 
 const AdminLoginPage = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter(); // استفاده از useRouter از next/navigation برای هدایت
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -58,22 +60,27 @@ const AdminLoginPage = () => {
   };
 
   return (
-    <Box className="flex items-center justify-center h-screen bg-gray-300 shadow-lg">
+    <Box className="flex items-center justify-center h-screen bg-green-50 shadow-lg">
       <Box className="w-5/12">
         <Image 
         src="/img/Book.jpg"
         width={600}
         height={700}
         alt="کتابخانه"
+        className="rounded-lg shadow-xl"
         />
       </Box>
       <Box
         component="form"
         onSubmit={handleLogin}
-        className="bg-white shadow-md rounded-md p-8 w-5/12 h-4/6"
+        className="bg-white shadow-lg rounded-lg p-8 w-5/12 h-4/6"
+        sx={{
+          boxShadow: 3,
+          borderRadius: "16px",
+        }}
       >
-        <Typography variant="h5" align="center" className="uppercase mb-4">
-          ورود
+        <Typography variant="h5" align="center" className="text-green-600 font-bold mb-6">
+          ورود به حساب کاربری
         </Typography>
 
         {error && (
@@ -81,13 +88,13 @@ const AdminLoginPage = () => {
             variant="body2"
             color="error"
             align="center"
-            className="mb-2"
+            className="mb-4"
           >
             {error}
           </Typography>
         )}
 
-        <Typography variant="body1" className="block mb-2">
+        <Typography variant="body1" className="block mb-2 text-green-700">
           نام کاربری
         </Typography>
         <TextField
@@ -99,21 +106,45 @@ const AdminLoginPage = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "8px",
+              backgroundColor: "#f1f1f1",
+            },
+          }}
         />
 
-        <Typography variant="body1" className="block mb-2">
+        <Typography variant="body1" className="block mb-2 text-green-700">
           رمز عبور
         </Typography>
-        <TextField
-          type="password"
-          placeholder="رمز عبور خود را وارد کنید"
-          fullWidth
-          variant="outlined"
-          className="mb-4"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <Box className="relative mb-4">
+          <TextField
+            type={showPassword ? "text" : "password"}
+            placeholder="رمز عبور خود را وارد کنید"
+            fullWidth
+            variant="outlined"
+            className="mb-4"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "8px",
+                backgroundColor: "#f1f1f1",
+              },
+            }}
+          />
+          <Box
+            className="absolute top-3 right-3 cursor-pointer"
+            onClick={() => setShowPassword((prev) => !prev)}
+          >
+            {showPassword ? (
+              <FaEyeSlash className="text-gray-600" size={20} />
+            ) : (
+              <FaEye className="text-gray-600" size={20} />
+            )}
+          </Box>
+        </Box>
 
         <FormControlLabel
           control={<Checkbox />}
@@ -126,8 +157,14 @@ const AdminLoginPage = () => {
           variant="contained"
           color="success"
           fullWidth
-          className="py-2"
+          className="py-2 text-lg"
           disabled={loading}
+          sx={{
+            backgroundColor: "#4CAF50",
+            "&:hover": {
+              backgroundColor: "#45a049",
+            },
+          }}
         >
           {loading ? "در حال ورود..." : "ورود"}
         </Button>

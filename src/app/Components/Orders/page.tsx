@@ -1,18 +1,34 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Button, Typography, Modal, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  Modal,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+} from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 // نوع داده برای سفارش
 interface Order {
   _id: string;
-  customerName: string;
-  totalAmount: number;
-  orderDate: string;
-  status: string;
+  user: string; // آیدی کاربر
+  products: { product: string; count: number; _id: string }[];
+  totalPrice: number;
+  deliveryDate: string;
+  deliveryStatus: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface OrderDetails {
@@ -24,6 +40,17 @@ interface OrderDetails {
   orderDate: string;
   status: string;
 }
+interface User {
+  _id: string;
+  firstname: string;
+  lastname: string;
+  username: string;
+  phoneNumber: string;
+  address: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const Orders = () => {
   const [orders, setOrders] = useState<Order[]>([]); // برای ذخیره لیست سفارشات
@@ -31,6 +58,7 @@ const Orders = () => {
   const [selectedOrder, setSelectedOrder] = useState<OrderDetails | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [users, setUsers] = useState<Map<string, User>>(new Map()); // ذخیره اطلاعات کاربر به صورت Map
 
   // بارگذاری سفارشات از API
   const fetchOrders = async () => {
@@ -41,18 +69,18 @@ const Orders = () => {
         },
       });
 
-      // نمایش ساختار کل داده دریافتی
       console.log("API Response:", response.data);
 
-      if (response.data && response.data.orders) {
-        setOrders(response.data.orders); // ذخیره سفارشات در وضعیت
+      if (response.data.status === "success" && response.data.data.orders) {
+        setOrders(response.data.data.orders); // ذخیره سفارشات در وضعیت
+        fetchUserDetails(response.data.data.orders);
       } else {
-        setError("سفارشی یافت نشد"); // پیام به‌روز شده
-        setOrders([]); // اگر داده‌ای نبود، آرایه خالی قرار دهیم
+        setError("سفارشی یافت نشد");
+        setOrders([]);
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
-      setError("خطا در بارگذاری سفارشات"); // پیام خطای جدید
+      setError("خطا در بارگذاری سفارشات");
     } finally {
       setLoading(false);
     }
@@ -61,17 +89,34 @@ const Orders = () => {
   // بارگذاری اطلاعات جزئیات سفارش
   const fetchOrderDetails = async (orderId: string) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/orders/${orderId}`, {
-        headers: {
-          Authorization: `Bearer ${Cookies.get("accessToken")}`,
-        },
-      });
+      const response = await axios.get(
+        `http://localhost:8000/api/orders/${orderId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
+          },
+        }
+      );
 
-      if (response.data && response.data.order) {
-        setSelectedOrder(response.data.order); // ذخیره جزئیات سفارش در وضعیت
+      // بررسی اینکه آیا داده‌ها به درستی دریافت شده‌اند
+      if (response.data.status === "success" && response.data.data.order) {
+        const order = response.data.data.order;
+        setSelectedOrder({
+          _id: order._id,
+          customerName: `${order.user.firstname} ${order.user.lastname}`,
+          items: order.products.map((product) => ({
+            productName: product.product.name,
+            quantity: product.count,
+            price: product.product.price,
+          })),
+          shippingAddress: order.user.address,
+          totalAmount: order.totalPrice,
+          orderDate: new Date(order.createdAt).toLocaleDateString(),
+          status: order.deliveryStatus ? "تحویل داده شده" : "در حال پردازش",
+        });
         setOpenModal(true); // باز کردن مودال
       } else {
-        setSelectedOrder(null); // اگر سفارش وجود نداشت
+        setSelectedOrder(null);
       }
     } catch (error) {
       console.error("Error fetching order details:", error);
@@ -89,9 +134,51 @@ const Orders = () => {
     fetchOrders();
   }, []);
 
+  const fetchUserDetails = async (orders: Order[]) => {
+    const userIds = Array.from(new Set(orders.map(order => order.user))); // گرفتن لیست آیدی‌های منحصر به فرد کاربران
+
+    try {
+      const userResponses = await Promise.all(
+        userIds.map(userId =>
+          axios.get(`http://localhost:8000/api/users/${userId}`, {
+            headers: {
+              Authorization: `Bearer ${Cookies.get("accessToken")}`,
+            },
+          })
+        )
+      );
+
+      const newUsers = new Map<string, User>();
+      userResponses.forEach(response => {
+        if (response.data.status === "success") {
+          const user = response.data.data.user; // اطلاعات کاربر در response.data.data.user قرار دارد
+          newUsers.set(user._id, user); // ذخیره اطلاعات کاربر در Map
+        }
+      });
+      setUsers(newUsers);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  };
+
+  // بارگذاری سفارشات هنگام بارگذاری کامپوننت
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  // بارگذاری سفارشات هنگام بارگذاری کامپوننت
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
   return (
-    <Box>
-      <Typography variant="h4" align="center" gutterBottom>
+    <Box sx={{ backgroundColor: "#f4f4f4", padding: 3 }}>
+      <Typography
+        variant="h4"
+        align="center"
+        gutterBottom
+        sx={{ color: "#4CAF50", fontWeight: "bold" }}
+      >
         سفارشات
       </Typography>
 
@@ -109,34 +196,63 @@ const Orders = () => {
           سفارشی یافت نشد.
         </Typography>
       ) : (
-        <TableContainer component={Paper}>
+        <TableContainer
+          component={Paper}
+          sx={{ boxShadow: 3, borderRadius: 2 }}
+        >
           <Table>
-            <TableHead>
+            <TableHead sx={{ backgroundColor: "#4CAF50" }}>
               <TableRow>
-                <TableCell>نام مشتری</TableCell>
-                <TableCell>مجموع مبلغ</TableCell>
-                <TableCell>تاریخ سفارش</TableCell>
-                <TableCell>وضعیت</TableCell>
-                <TableCell>عملیات</TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
+                  نام مشتری
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
+                  مجموع مبلغ
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
+                  تاریخ سفارش
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
+                  وضعیت
+                </TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: "bold" }}>
+                  عملیات
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((order) => (
-                <TableRow key={order._id}>
-                  <TableCell>{order.customerName}</TableCell>
-                  <TableCell>{order.totalAmount} تومان</TableCell>
-                  <TableCell>{order.orderDate}</TableCell>
-                  <TableCell>{order.status}</TableCell>
-                  <TableCell>
-                    <IconButton
-                      onClick={() => fetchOrderDetails(order._id)}
-                      color="primary"
-                    >
-                      <VisibilityIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {orders.map((order) => {
+                const user = users.get(order.user); // دریافت اطلاعات کاربر بر اساس آیدی
+                return (
+                  <TableRow
+                    key={order._id}
+                    sx={{ "&:hover": { backgroundColor: "#e8f5e9" } }}
+                  >
+                    <TableCell>
+                      {user
+                        ? `${user.firstname} ${user.lastname}`
+                        : "در حال بارگذاری..."}
+                    </TableCell>
+                    <TableCell>{order.totalPrice} تومان</TableCell>
+                    <TableCell>
+                      {new Date(order.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      {order.deliveryStatus
+                        ? "تحویل داده شده"
+                        : "در حال پردازش"}
+                    </TableCell>
+                    <TableCell>
+                      <IconButton
+                        onClick={() => fetchOrderDetails(order._id)}
+                        color="success"
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
@@ -162,7 +278,7 @@ const Orders = () => {
             boxShadow: 24,
           }}
         >
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" gutterBottom sx={{ color: "#4CAF50" }}>
             جزئیات سفارش
           </Typography>
 

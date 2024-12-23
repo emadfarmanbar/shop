@@ -37,14 +37,16 @@ const IconSection: React.FC = () => {
       {iconItems.map((item, index) => (
         <div
           key={index}
-          className="flex items-center gap-6 p-8 "
+          className="flex flex-col items-center gap-4 p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
         >
-          {item.icon}
-          <div>
-            <Typography variant="h6" className="text-xl text-black pb-2">
+          <div className="p-4 bg-green-100 rounded-full">
+            {item.icon}
+          </div>
+          <div className="text-center">
+            <Typography variant="h6" className="text-green-600 text-xl font-semibold pb-2">
               {item.title}
             </Typography>
-            <Typography variant="body1" className="text-lg text-gray-600">
+            <Typography variant="body1" className="text-gray-600">
               {item.description}
             </Typography>
           </div>

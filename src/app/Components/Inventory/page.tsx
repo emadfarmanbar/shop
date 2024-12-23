@@ -92,8 +92,8 @@ const Inventory = () => {
   }, []);
 
   return (
-    <Box>
-      <Typography variant="h4" align="center" gutterBottom>
+    <Box sx={{ backgroundColor: "#f0fdf4", padding: 3 }}>
+      <Typography variant="h4" align="center" gutterBottom sx={{ color: "#388e3c", fontWeight: "bold" }}>
         موجودی‌ها
       </Typography>
       
@@ -103,22 +103,25 @@ const Inventory = () => {
           هیچ محصولی برای نمایش وجود ندارد.
         </Typography>
       ) : (
-        <TableContainer component={Paper}  sx={{
-          maxHeight: "600px", // حداکثر ارتفاع برای نمایش جدول
-          overflowY: "auto", // فعال کردن اسکرول عمودی
+        <TableContainer component={Paper} sx={{
+          maxHeight: "600px", 
+          overflowY: "auto", 
+          boxShadow: 4, 
+          borderRadius: 2,
+          backgroundColor: "#ffffff",
         }}>
           <Table>
-            <TableHead>
+            <TableHead sx={{ backgroundColor: "#388e3c", color: "#ffffff" }}>
               <TableRow>
-                <TableCell>نام محصول</TableCell>
-                <TableCell>تعداد</TableCell>
-                <TableCell>قیمت</TableCell>
-                <TableCell>عملیات</TableCell>
+                <TableCell sx={{ fontWeight: "bold", color: "#ffffff" }}>نام محصول</TableCell>
+                <TableCell sx={{ fontWeight: "bold", color: "#ffffff" }}>تعداد</TableCell>
+                <TableCell sx={{ fontWeight: "bold", color: "#ffffff" }}>قیمت</TableCell>
+                <TableCell sx={{ fontWeight: "bold", color: "#ffffff" }}>عملیات</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {products.map((product) => (
-                <TableRow key={product._id}>
+                <TableRow key={product._id} sx={{ "&:hover": { backgroundColor: "#e8f5e9" } }}>
                   <TableCell>{product.name}</TableCell>
                   <TableCell>{product.quantity}</TableCell>
                   <TableCell>{product.price} تومان</TableCell>
@@ -148,13 +151,13 @@ const Inventory = () => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 400,
-            backgroundColor: "white",
+            backgroundColor: "#ffffff",
             padding: 3,
             borderRadius: 2,
             boxShadow: 24,
           }}
         >
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" gutterBottom sx={{ color: "#388e3c", fontWeight: "bold" }}>
             ویرایش محصول
           </Typography>
 
@@ -165,6 +168,7 @@ const Inventory = () => {
             onChange={(e) => setUpdatedQuantity(Number(e.target.value))}
             fullWidth
             margin="normal"
+            sx={{ backgroundColor: "#f0fdf4", borderRadius: 1 }}
           />
           <TextField
             label="قیمت"
@@ -173,12 +177,13 @@ const Inventory = () => {
             onChange={(e) => setUpdatedPrice(Number(e.target.value))}
             fullWidth
             margin="normal"
+            sx={{ backgroundColor: "#f0fdf4", borderRadius: 1 }}
           />
           <Box mt={2} display="flex" justifyContent="space-between">
-            <Button onClick={handleCloseModal} color="secondary">
+            <Button onClick={handleCloseModal} color="secondary" variant="outlined">
               بستن
             </Button>
-            <Button onClick={handleEdit} color="primary" variant="contained">
+            <Button onClick={handleEdit} color="success" variant="contained">
               ذخیره تغییرات
             </Button>
           </Box>

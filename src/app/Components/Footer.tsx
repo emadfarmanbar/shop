@@ -18,13 +18,13 @@ const Footer: React.FC = () => {
             <Typography
               variant="h5"
               component="h3"
-              className="font-bold"
+              className="font-bold text-white"
             >
               کتابخانه ما
             </Typography>
             <Typography
               variant="body1"
-              className="mt-4 leading-relaxed"
+              className="mt-4 leading-relaxed text-white opacity-80"
             >
               با دسترسی به بهترین منابع علمی و آموزشی، کتابخانه ما شما را در
               مسیر یادگیری و پیشرفت همراهی می‌کند. ما برای شما بهترین‌ها را
@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
           <Box className="w-full md:w-1/4 text-center md:text-left">
             <Typography
               variant="h6"
-              className="font-semibold mb-4"
+              className="font-semibold mb-4 text-white"
             >
               لینک‌های مفید
             </Typography>
@@ -60,7 +60,7 @@ const Footer: React.FC = () => {
           <Box className="w-full md:w-1/4 text-center md:text-right">
             <Typography
               variant="h6"
-              className="font-semibold mb-4"
+              className="font-semibold mb-4 text-white"
             >
               شبکه‌های اجتماعی
             </Typography>
@@ -75,7 +75,7 @@ const Footer: React.FC = () => {
                   key={index}
                   href="#"
                   aria-label={social.label}
-                  className="bg-white hover:bg-gray-200 text-green-500 p-3 rounded-full shadow-lg transition-all"
+                  className="bg-white hover:bg-gray-200 text-green-500 p-3 rounded-full shadow-lg transition-all transform hover:scale-110"
                 >
                   {React.createElement(social.icon, { size: 20 })}
                 </MuiLink>
@@ -91,7 +91,7 @@ const Footer: React.FC = () => {
         <Box className="text-center">
           <Typography
             variant="body2"
-            className="font-medium"
+            className="font-medium text-white"
           >
             © 2024 کتابخانه ما. تمامی حقوق محفوظ است.
           </Typography>

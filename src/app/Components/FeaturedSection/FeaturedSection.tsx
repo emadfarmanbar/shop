@@ -110,12 +110,12 @@ const FeaturedSection: React.FC = () => {
                 />
               </div>
 
-              <div className="content bg-gray-100 p-4 rounded-b-lg">
+              <div className="content bg-white p-4 rounded-b-lg">
                 {/* Brand and Price */}
                 <div className="brand bg-opacity-70 bg-gray-800 text-white px-3 py-1 rounded-lg absolute top-4 left-4 z-10">
                   {product.brand}
                 </div>
-                <Typography variant="h6" className="text-xl text-black mb-2">
+                <Typography variant="h6" className="text-xl text-green-600 mb-2">
                   {product.name}
                 </Typography>
                 <div className="price text-2xl text-black mb-2">
@@ -144,16 +144,17 @@ const FeaturedSection: React.FC = () => {
                 {/* Button to add to cart */}
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="success"
                   className="w-full mb-2"
                   onClick={() => addToCart(product)} // فراخوانی تابع افزودن به سبد خرید
+                  startIcon={<FaHeart />} // افزودن آیکون به دکمه
                 >
                   اضافه کردن به سبد خرید
                 </Button>
 
                 {/* Link to product details using slugname */}
                 <Link href={`/product/${product.slugname}`} passHref>
-                  <Button variant="outlined" className="w-full">
+                  <Button variant="outlined" className="w-full" startIcon={<FaEye />}>
                     مشاهده جزئیات
                   </Button>
                 </Link>

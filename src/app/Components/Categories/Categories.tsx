@@ -24,7 +24,6 @@ const Categories: React.FC = () => {
           throw new Error("Failed to fetch categories");
         }
         const data = await response.json();
-        console.log(data); // بررسی پاسخ API
         const fetchedCategories = data?.data?.categories;
         setCategories(Array.isArray(fetchedCategories) ? fetchedCategories : []);
       } catch (err) {
@@ -41,7 +40,7 @@ const Categories: React.FC = () => {
   if (loading) {
     return (
       <Box className="flex justify-center items-center h-64">
-        <CircularProgress />
+        <CircularProgress color="success" />
       </Box>
     );
   }
@@ -64,9 +63,9 @@ const Categories: React.FC = () => {
           <Link
             key={category._id}
             href={`/category/${category._id}`}
-            className="flex flex-col items-center justify-center w-32 h-32 rounded-full bg-gray-100 shadow-lg hover:shadow-xl transition-all transform hover:scale-110"
+            className="flex flex-col items-center justify-center w-32 h-32 rounded-full bg-white shadow-lg hover:shadow-xl transition-all transform hover:scale-110"
           >
-            <div className="flex items-center justify-center w-20 h-20 rounded-full bg-blue-200">
+            <div className="flex items-center justify-center w-20 h-20 rounded-full bg-green-200">
               {category.icon ? (
                 <img
                   src={`http://localhost:8000/images/categories/icons/${category.icon}`}
@@ -74,7 +73,7 @@ const Categories: React.FC = () => {
                   className="w-12 h-12 object-contain"
                 />
               ) : (
-                <MdCategory className="text-blue-500 text-3xl" />
+                <MdCategory className="text-green-500 text-3xl" />
               )}
             </div>
             <span className="mt-3 text-base font-semibold text-gray-800">
