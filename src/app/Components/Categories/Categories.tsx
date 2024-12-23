@@ -62,7 +62,7 @@ const Categories: React.FC = () => {
         {categories.map((category) => (
           <Link
             key={category._id}
-            href={`/category/${category._id}`}
+            href={`/Products/ProductsPage`}
             className="flex flex-col items-center justify-center w-32 h-32 rounded-full bg-white shadow-lg hover:shadow-xl transition-all transform hover:scale-110"
           >
             <div className="flex items-center justify-center w-20 h-20 rounded-full bg-green-200">

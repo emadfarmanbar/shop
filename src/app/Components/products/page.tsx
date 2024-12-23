@@ -88,43 +88,52 @@ const ProductManager: React.FC = () => {
   // ارسال فرم داده‌ها برای افزودن محصول جدید
   const handleAddProduct = async () => {
     const formData = new FormData();
-    
+
     // اضافه کردن داده‌های محصول به فرم
     formData.append("name", newProduct.name);
     formData.append("price", newProduct.price);
     formData.append("quantity", newProduct.quantity);
     formData.append("brand", newProduct.brand);
     formData.append("description", newProduct.description);
-  
+
     // اگر تصویر بندانگشتی وجود دارد، آن را اضافه کن
     if (newProduct.thumbnail) {
-      formData.append("thumbnail", newProduct.thumbnail);  // نام فیلد باید با نام مورد انتظار در سرور مطابقت داشته باشد
+      formData.append("thumbnail", newProduct.thumbnail); // نام فیلد باید با نام مورد انتظار در سرور مطابقت داشته باشد
     }
-  
-    // اگر تصاویری برای آپلود وجود دارند، آن‌ها را اضافه کن
-    if (newProduct.images && newProduct.images.length > 0) {
-      newProduct.images.forEach((image) => {
-        formData.append("images[]", image);  // نام فیلد باید با نام مورد انتظار در سرور مطابقت داشته باشد
-      });
+
+    // اضافه کردن تصاویر به فرم
+    if (newProduct.images) {
+      formData.append("images", newProduct.images); // نام فیلد باید با نام مورد انتظار در سرور مطابقت داشته باشد
     }
-  
+
     // اضافه کردن دسته‌بندی و زیرمجموعه دسته‌بندی
     formData.append("category", newProduct.category);
     formData.append("subcategory", newProduct.subcategory);
-  
+
     try {
       const token = Cookies.get("accessToken");
-  
+
       // ارسال درخواست برای افزودن محصول جدید
-      await axios.post("http://localhost:8000/api/products", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
+      try {
+        const response = await axios.post(
+          "http://localhost:8000/api/products",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error(
+          "Error adding product:",
+          error.response ? error.response.data : error
+        );
+      }
+
       setIsAddModalOpen(false); // بستن مودال
       fetchProducts(); // بارگذاری مجدد محصولات
-  
+
       // بازنشانی فرم
       setNewProduct({
         name: "",
@@ -141,7 +150,7 @@ const ProductManager: React.FC = () => {
       console.error("Error adding product:", error);
     }
   };
-  
+
   // ارسال فرم داده‌ها برای ویرایش محصول
   const handleEditProduct = async () => {
     const formData = new FormData();
@@ -496,18 +505,16 @@ const ProductManager: React.FC = () => {
               accept="image/*"
               className="border p-2 rounded w-full mb-4"
             />
-
             <input
               type="file"
               name="images"
               onChange={(e) =>
                 setNewProduct({
                   ...newProduct,
-                  images: e.target.files ? Array.from(e.target.files) : [],
+                  images: e.target.files ? e.target.files[0] : null,
                 })
               }
               accept="image/*"
-              multiple
               className="border p-2 rounded w-full mb-4"
             />
 

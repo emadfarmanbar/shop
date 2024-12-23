@@ -1,13 +1,25 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import { FiHome, FiPackage, FiShoppingCart, FiBarChart2, FiClipboard, FiLayers } from 'react-icons/fi'; // افزودن آیکون دسته‌بندی‌ها
+import { AiOutlineCloseCircle } from 'react-icons/ai'; // آیکون ضربدر قرمز برای دسترسی غیرمجاز
 import CategoryManager from '../CategoryManager/CategoryManager';
 import ProductManager from '../products/page';
 import Inventory from '../Inventory/page';
 import Orders from '../Orders/page';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie'; // برای خواندن کوکی‌ها
 
 const AdminDashboard: React.FC = () => {
   const [selectedSection, setSelectedSection] = useState<string>('category');
+  const [hasAccess, setHasAccess] = useState<boolean>(true); // بررسی دسترسی
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = Cookies.get("accessToken"); // خواندن توکن از کوکی‌ها
+    if (!token) {
+      setHasAccess(false); // اگر توکن وجود نداشت، دسترسی غیرمجاز است
+    }
+  }, []);
 
   // کامپوننت منوی کناری
   const Sidebar = () => (
@@ -20,7 +32,7 @@ const AdminDashboard: React.FC = () => {
           }`}
           onClick={() => setSelectedSection('category')}
         >
-          <FiLayers className="mr-2" /> دسته‌بندی‌ها {/* آیکون دسته‌بندی */}
+          <FiLayers className="mr-2" /> دسته‌بندی‌ها
         </li>
         <li
           className={`flex items-center cursor-pointer py-2 rounded-md ${
@@ -56,6 +68,24 @@ const AdminDashboard: React.FC = () => {
 
   // کامپوننت محتوای هر بخش
   const ContentArea = () => {
+    if (!hasAccess) {
+      return (
+        <div className="flex justify-center items-center w-full h-screen bg-gray-50">
+          <div className="text-center p-6 bg-white shadow-md rounded-md max-w-lg">
+            <AiOutlineCloseCircle className="text-6xl text-red-600 mx-auto" />
+            <h2 className="text-xl font-semibold text-red-600 mt-4">دسترسی غیرمجاز</h2>
+            <p className="mt-4 text-gray-700">شما نمی‌توانید به این بخش دسترسی پیدا کنید. لطفاً وارد حساب کاربری خود شوید.</p>
+            <button
+              onClick={() => router.push('/')}
+              className="mt-6 px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+            >
+              بازگشت به صفحه اصلی
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     const renderContent = () => {
       switch (selectedSection) {
         case 'category':
@@ -82,7 +112,7 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div className="flex h-screen">
-      <Sidebar />
+      {hasAccess && <Sidebar />}
       <ContentArea />
     </div>
   );
