@@ -25,7 +25,7 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps): JSX.Element {
   return (
     <html dir="rtl" lang="fa">
-      <body className={`${IRANSans.variable} antialiased`}>
+      <body className={`${IRANSans.variable} antialiased bg-gray-50`}>
         <ClientProvider>
           {children}
           </ClientProvider>

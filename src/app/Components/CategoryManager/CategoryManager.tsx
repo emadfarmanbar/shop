@@ -262,33 +262,60 @@ const CategoryManager: React.FC = () => {
       {/* مودال افزودن/تغییر دسته‌بندی */}
       {isCategoryModalOpen && (editingCategory || !editingCategory) && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded shadow-md">
+          <div className="bg-white p-6 rounded shadow-md w-96">
             <h2 className="text-2xl mb-4">
               {editingCategory ? "تغییر دسته‌بندی" : "افزودن دسته‌بندی جدید"}
             </h2>
-            <input
-              type="text"
-              placeholder="نام دسته‌بندی"
-              value={editingCategory ? editingCategory.name : newCategoryName}
-              onChange={(e) =>
-                editingCategory
-                  ? setEditingCategory({
-                      ...editingCategory,
-                      name: e.target.value,
-                    })
-                  : setNewCategoryName(e.target.value)
-              }
-              className="border p-2 rounded mb-4 w-full"
-            />
-            <div className="mb-4">
+
+            {/* Input for category name */}
+            <div className="relative mb-4">
+              <input
+                type="text"
+                placeholder="نام دسته‌بندی"
+                value={editingCategory ? editingCategory.name : newCategoryName}
+                onChange={(e) =>
+                  editingCategory
+                    ? setEditingCategory({
+                        ...editingCategory,
+                        name: e.target.value,
+                      })
+                    : setNewCategoryName(e.target.value)
+                }
+                className="border p-2 rounded w-full mb-4"
+              />
+            </div>
+
+            {/* Category Icon Input */}
+            <div className="relative mb-4">
               <input
                 type="file"
                 onChange={(e) =>
                   setNewCategoryIcon(e.target.files?.[0] || null)
                 }
-                className="w-full"
+                className="absolute inset-0 opacity-0 cursor-pointer"
               />
+              <div className="flex items-center justify-center border-2 border-gray-300 rounded-md p-4 bg-gray-50 hover:bg-gray-100 transition-all">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  className="w-6 h-6 text-gray-500"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 7l9-4 9 4v12l-9 4-9-4V7z"
+                  />
+                </svg>
+                <span className="ml-2 text-gray-700 text-sm">
+                  انتخاب آیکن دسته‌بندی
+                </span>
+              </div>
             </div>
+
+            {/* Buttons for save or cancel */}
             <div className="flex justify-end gap-4">
               <button
                 onClick={() => setIsCategoryModalOpen(false)}

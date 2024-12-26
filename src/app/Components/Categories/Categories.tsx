@@ -1,3 +1,4 @@
+// Categories.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -24,8 +25,14 @@ const Categories: React.FC = () => {
           throw new Error("Failed to fetch categories");
         }
         const data = await response.json();
+        
+        // اطمینان از وجود داده‌ها قبل از استفاده
         const fetchedCategories = data?.data?.categories;
-        setCategories(Array.isArray(fetchedCategories) ? fetchedCategories : []);
+        if (Array.isArray(fetchedCategories)) {
+          setCategories(fetchedCategories);
+        } else {
+          setError("داده‌های دسته‌بندی‌ها به درستی دریافت نشدند");
+        }
       } catch (err) {
         setError("خطا در دریافت دسته‌بندی‌ها");
         console.error(err);
@@ -54,7 +61,7 @@ const Categories: React.FC = () => {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-50">
       <h2 className="text-2xl font-bold text-green-600 text-center mb-6">
         دسته‌بندی کتاب‌های کتابخانه
       </h2>
@@ -62,8 +69,8 @@ const Categories: React.FC = () => {
         {categories.map((category) => (
           <Link
             key={category._id}
-            href={`/Products/ProductsPage`}
-            className="flex flex-col items-center justify-center w-32 h-32 rounded-full bg-white shadow-lg hover:shadow-xl transition-all transform hover:scale-110"
+            href={`/Products/FilteredProducts/${category._id}`}  // ارسال id به URL
+            className="flex flex-col items-center justify-center w-32 h-32 rounded-full bg-gray-50 shadow-lg hover:shadow-xl transition-all transform hover:scale-110"
           >
             <div className="flex items-center justify-center w-20 h-20 rounded-full bg-green-200">
               {category.icon ? (

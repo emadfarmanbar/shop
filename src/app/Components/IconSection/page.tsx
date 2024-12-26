@@ -33,7 +33,7 @@ const iconItems: IconData[] = [
 
 const IconSection: React.FC = () => {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6 w-10/12 m-auto">
+    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6 w-10/12 m-auto bg-gray-50">
       {iconItems.map((item, index) => (
         <div
           key={index}

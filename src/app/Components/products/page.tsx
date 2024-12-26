@@ -8,9 +8,11 @@ import {
   FaPlus,
   FaTrash,
 } from "react-icons/fa";
-import { MdCancel } from "react-icons/md"; // آیکون انصراف
+import { MdCancel } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
-import { AiOutlineCheck } from "react-icons/ai"; // آیکون تایید
+import { AiOutlineCheck } from "react-icons/ai";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const ProductManager: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
@@ -87,6 +89,108 @@ const ProductManager: React.FC = () => {
 
   // ارسال فرم داده‌ها برای افزودن محصول جدید
   const handleAddProduct = async () => {
+    // ولیدیشن فیلدها
+    if (!newProduct.name) {
+      confirmAlert({
+        message: "نام محصول الزامی است.",
+        buttons: [
+          {
+            label: "باشه",
+          },
+        ],
+      });
+      return;
+    }
+    if (!newProduct.price || newProduct.price <= 0) {
+      confirmAlert({
+        message: "قیمت محصول باید عددی مثبت باشد.",
+        buttons: [
+          {
+            label: "باشه",
+          },
+        ],
+      });
+      return;
+    }
+    if (!newProduct.quantity || newProduct.quantity <= 0) {
+      confirmAlert({
+        message: "تعداد محصول باید عددی مثبت باشد.",
+        buttons: [
+          {
+            label: "باشه",
+          },
+        ],
+      });
+      return;
+    }
+    if (!newProduct.brand) {
+      confirmAlert({
+        message: "برند محصول الزامی است.",
+        buttons: [
+          {
+            label: "باشه",
+          },
+        ],
+      });
+      return;
+    }
+    if (!newProduct.description) {
+      confirmAlert({
+        message: "توضیحات محصول الزامی است.",
+        buttons: [
+          {
+            label: "باشه",
+          },
+        ],
+      });
+      return;
+    }
+    if (!newProduct.category) {
+      confirmAlert({
+        message: "دسته‌بندی محصول الزامی است.",
+        buttons: [
+          {
+            label: "باشه",
+          },
+        ],
+      });
+      return;
+    }
+    if (!newProduct.subcategory) {
+      confirmAlert({
+        message: "زیرگروه محصول الزامی است.",
+        buttons: [
+          {
+            label: "باشه",
+          },
+        ],
+      });
+      return;
+    }
+    if (!newProduct.thumbnail) {
+      confirmAlert({
+        message: "تصویر پیش‌نمایش الزامی است.",
+        buttons: [
+          {
+            label: "باشه",
+          },
+        ],
+      });
+      return;
+    }
+    if (!newProduct.images) {
+      confirmAlert({
+        message: "تصاویر محصول الزامی است.",
+        buttons: [
+          {
+            label: "باشه",
+          },
+        ],
+      });
+      return;
+    }
+
+    // پس از موفقیت‌آمیز بودن ولیدیشن‌ها، داده‌ها به فرم ارسال می‌شود
     const formData = new FormData();
 
     // اضافه کردن داده‌های محصول به فرم
@@ -98,12 +202,12 @@ const ProductManager: React.FC = () => {
 
     // اگر تصویر بندانگشتی وجود دارد، آن را اضافه کن
     if (newProduct.thumbnail) {
-      formData.append("thumbnail", newProduct.thumbnail); // نام فیلد باید با نام مورد انتظار در سرور مطابقت داشته باشد
+      formData.append("thumbnail", newProduct.thumbnail);
     }
 
     // اضافه کردن تصاویر به فرم
     if (newProduct.images) {
-      formData.append("images", newProduct.images); // نام فیلد باید با نام مورد انتظار در سرور مطابقت داشته باشد
+      formData.append("images", newProduct.images);
     }
 
     // اضافه کردن دسته‌بندی و زیرمجموعه دسته‌بندی
@@ -114,22 +218,25 @@ const ProductManager: React.FC = () => {
       const token = Cookies.get("accessToken");
 
       // ارسال درخواست برای افزودن محصول جدید
-      try {
-        const response = await axios.post(
-          "http://localhost:8000/api/products",
-          formData,
+      const response = await axios.post(
+        "http://localhost:8000/api/products",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // نمایش پیام تأیید پس از موفقیت‌آمیز بودن عملیات
+      confirmAlert({
+        message: "محصول با موفقیت افزوده شد.",
+        buttons: [
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-      } catch (error) {
-        console.error(
-          "Error adding product:",
-          error.response ? error.response.data : error
-        );
-      }
+            label: "باشه",
+          },
+        ],
+      });
 
       setIsAddModalOpen(false); // بستن مودال
       fetchProducts(); // بارگذاری مجدد محصولات
@@ -148,6 +255,14 @@ const ProductManager: React.FC = () => {
       });
     } catch (error) {
       console.error("Error adding product:", error);
+      confirmAlert({
+        message: "خطا در اضافه کردن محصول. لطفاً دوباره تلاش کنید.",
+        buttons: [
+          {
+            label: "باشه",
+          },
+        ],
+      });
     }
   };
 
@@ -493,30 +608,79 @@ const ProductManager: React.FC = () => {
               ))}
             </select>
 
-            <input
-              type="file"
-              name="thumbnail"
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  thumbnail: e.target.files ? e.target.files[0] : null,
-                })
-              }
-              accept="image/*"
-              className="border p-2 rounded w-full mb-4"
-            />
-            <input
-              type="file"
-              name="images"
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  images: e.target.files ? e.target.files[0] : null,
-                })
-              }
-              accept="image/*"
-              className="border p-2 rounded w-full mb-4"
-            />
+            <div className="flex gap-5 m-3">
+              {/* Thumbnail Input */}
+              <div className="relative">
+                <input
+                  id="thumbnail"
+                  type="file"
+                  name="thumbnail"
+                  onChange={(e) =>
+                    setNewProduct({
+                      ...newProduct,
+                      thumbnail: e.target.files ? e.target.files[0] : null,
+                    })
+                  }
+                  accept="image/*"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+                <div className="flex items-center justify-center border-2 border-gray-300 rounded-md p-4 bg-gray-50 hover:bg-gray-100 transition-all">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="w-6 h-6 text-gray-500"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 7l9-4 9 4v12l-9 4-9-4V7z"
+                    />
+                  </svg>
+                  <span className="ml-2 text-gray-700 text-sm">
+                    انتخاب تصویر پیش‌نمایش
+                  </span>
+                </div>
+              </div>
+
+              {/* Product Images Input */}
+              <div className="relative">
+                <input
+                  id="images"
+                  type="file"
+                  name="images"
+                  onChange={(e) =>
+                    setNewProduct({
+                      ...newProduct,
+                      images: e.target.files ? e.target.files[0] : null,
+                    })
+                  }
+                  accept="image/*"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+                <div className="flex items-center justify-center border-2 border-gray-300 rounded-md p-4 bg-gray-50 hover:bg-gray-100 transition-all">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="w-6 h-6 text-gray-500"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 7l9-4 9 4v12l-9 4-9-4V7z"
+                    />
+                  </svg>
+                  <span className="ml-2 text-gray-700 text-sm">
+                    انتخاب تصویر محصول
+                  </span>
+                </div>
+              </div>
+            </div>
 
             <div className="flex justify-end gap-3">
               <button
@@ -568,66 +732,114 @@ const ProductManager: React.FC = () => {
               ))}
             </select>
 
-            {/* نمایش تصویر شاخص فعلی */}
-            {productToEdit && productToEdit.thumbnail && (
-              <div className="mb-4">
-                <img
-                  src={`http://localhost:8000/images/products/images/${productToEdit.thumbnail}`}
-                  alt="Product Thumbnail"
-                  width="100px"
-                />
-                <p className="text-sm text-gray-500">تصویر شاخص فعلی</p>
-              </div>
-            )}
-
-            {/* تغییر تصویر شاخص */}
-            <input
-              type="file"
-              name="thumbnail"
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  thumbnail: e.target.files ? e.target.files[0] : null,
-                })
-              }
-              accept="image/*"
-              className="border p-2 rounded w-full mb-4"
-            />
-
-            {/* نمایش تصاویر فعلی */}
-            {productToEdit &&
-              productToEdit.images &&
-              productToEdit.images.length > 0 && (
-                <div className="mb-4">
-                  <h3>تصاویر فعلی</h3>
-                  <div className="flex gap-2">
-                    {productToEdit.images.map((image, index) => (
-                      <img
-                        key={index}
-                        src={`http://localhost:8000/images/products/images/${image}`}
-                        alt={`Product Image ${index + 1}`}
-                        width="50px"
-                        className="border"
-                      />
-                    ))}
+            <div className="flex gap-5 m-3">
+              {/* Thumbnail Input */}
+              <div className="relative">
+                {/* نمایش تصویر شاخص فعلی */}
+                {productToEdit && productToEdit.thumbnail && (
+                  <div className="mb-4">
+                    <img
+                      src={`http://localhost:8000/images/products/thumbnails/${productToEdit.thumbnail}`}
+                      alt="Product Thumbnail"
+                      width="100px"
+                    />
+                    <p className="text-sm text-gray-500">تصویر شاخص فعلی</p>
                   </div>
-                </div>
-              )}
+                )}
 
-            {/* انتخاب تصاویر جدید */}
-            <input
-              type="file"
-              name="images"
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  images: e.target.files ? Array.from(e.target.files) : [],
-                })
-              }
-              accept="image/*"
-              multiple
-              className="border p-2 rounded w-full mb-4"
-            />
+                {/* تغییر تصویر شاخص */}
+                <input
+                  id="thumbnail"
+                  type="file"
+                  name="thumbnail"
+                  onChange={(e) =>
+                    setNewProduct({
+                      ...newProduct,
+                      thumbnail: e.target.files ? e.target.files[0] : null,
+                    })
+                  }
+                  accept="image/*"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+                <div className="flex items-center justify-center border-2 border-gray-300 rounded-md p-4 bg-gray-50 hover:bg-gray-100 transition-all">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="w-6 h-6 text-gray-500"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 7l9-4 9 4v12l-9 4-9-4V7z"
+                    />
+                  </svg>
+                  <span className="ml-2 text-gray-700 text-sm">
+                    انتخاب تصویر پیش‌نمایش
+                  </span>
+                </div>
+              </div>
+
+              {/* Product Images Input */}
+              <div className="relative">
+                {/* نمایش تصاویر فعلی */}
+                {productToEdit &&
+                  productToEdit.images &&
+                  productToEdit.images.length > 0 && (
+                    <div className="mb-4">
+                      <h3>تصاویر فعلی</h3>
+                      <div className="flex gap-2">
+                        {productToEdit.images.map((image, index) => (
+                          <img
+                            key={index}
+                            src={`http://localhost:8000/images/products/images/${image}`}
+                            alt={`Product Image ${index + 1}`}
+                            width="50px"
+                            className="border"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                {/* انتخاب تصاویر جدید */}
+                <input
+                  id="images"
+                  type="file"
+                  name="images"
+                  onChange={(e) =>
+                    setNewProduct({
+                      ...newProduct,
+                      images: e.target.files ? Array.from(e.target.files) : [],
+                    })
+                  }
+                  accept="image/*"
+                  multiple
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+                <div className="flex items-center justify-center border-2 border-gray-300 rounded-md p-4 bg-gray-50 hover:bg-gray-100 transition-all">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="w-6 h-6 text-gray-500"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 7l9-4 9 4v12l-9 4-9-4V7z"
+                    />
+                  </svg>
+                  <span className="ml-2 text-gray-700 text-sm">
+                    انتخاب تصاویر محصول
+                  </span>
+                </div>
+              </div>
+            </div>
 
             <div className="flex justify-end gap-3">
               <button

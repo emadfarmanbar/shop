@@ -1,103 +1,78 @@
-"use client";
-
 import React from "react";
-import { Box, Typography, Link as MuiLink, Divider } from "@mui/material";
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { Button, TextField } from "@mui/material";
+import { FaArrowRight } from "react-icons/fa";
 
 const Footer: React.FC = () => {
   return (
-    <Box
-      component="footer"
-      className="bg-green-500 text-white py-10"
-    >
-      <Box className="container mx-auto px-6">
-        {/* بخش بالا */}
-        <Box className="flex flex-wrap justify-between items-start gap-8">
-          {/* توضیحات لوگو */}
-          <Box className="w-full md:w-1/3 text-center md:text-left">
-            <Typography
-              variant="h5"
-              component="h3"
-              className="font-bold text-white"
+    <footer className="bg-[#0B1120] text-white py-10 rtl">
+      <div className="container mx-auto px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+        {/* ستون اول */}
+        <div>
+          <h2 className="text-2xl font-bold mb-4">کتاب دات کام</h2>
+          <p className="text-sm text-gray-400 mb-4">
+            جدیدترین و بهترین کتاب‌ها را با ما کشف کنید. کتاب‌های پرفروش و نویسندگان برجسته در انتظار شما هستند.
+          </p>
+          <p className="text-sm text-gray-400 mb-6">
+            به جمع <span className="font-bold">110,791,448,19</span> نفر عضو خبرنامه بپیوندید.
+          </p>
+          <div className="flex items-center gap-2">
+            <TextField
+              placeholder="ایمیل شما"
+              variant="outlined"
+              size="small"
+              className="bg-white rounded-lg flex-grow"
+            />
+            <Button
+              variant="contained"
+              className="bg-green-600 hover:bg-green-700 text-white rounded-lg"
             >
-              کتابخانه ما
-            </Typography>
-            <Typography
-              variant="body1"
-              className="mt-4 leading-relaxed text-white opacity-80"
-            >
-              با دسترسی به بهترین منابع علمی و آموزشی، کتابخانه ما شما را در
-              مسیر یادگیری و پیشرفت همراهی می‌کند. ما برای شما بهترین‌ها را
-              فراهم کرده‌ایم.
-            </Typography>
-          </Box>
+              <FaArrowRight />
+            </Button>
+          </div>
+        </div>
 
-          {/* لینک‌های مفید */}
-          <Box className="w-full md:w-1/4 text-center md:text-left">
-            <Typography
-              variant="h6"
-              className="font-semibold mb-4 text-white"
-            >
-              لینک‌های مفید
-            </Typography>
-            <Box className="space-y-2">
-              {["صفحه اصلی", "درباره ما", "تماس با ما", "حریم خصوصی"].map(
-                (link, index) => (
-                  <MuiLink
-                    key={index}
-                    href="#"
-                    underline="hover"
-                    className="block text-white hover:text-gray-300 text-base"
-                  >
-                    {link}
-                  </MuiLink>
-                )
-              )}
-            </Box>
-          </Box>
+        {/* ستون دوم */}
+        <div>
+          <h3 className="text-lg font-bold mb-4">آنچه ارائه می‌دهیم</h3>
+          <ul className="text-sm text-gray-400 space-y-2">
+            <li>عضویت</li>
+            <li>فروش کتاب‌ها</li>
+            <li>فروش مجموعه‌ها</li>
+            <li>لینک نمونه</li>
+            <li>دوره‌های آموزشی</li>
+            <li>لینک دیگر</li>
+          </ul>
+        </div>
 
-          {/* شبکه‌های اجتماعی */}
-          <Box className="w-full md:w-1/4 text-center md:text-right">
-            <Typography
-              variant="h6"
-              className="font-semibold mb-4 text-white"
-            >
-              شبکه‌های اجتماعی
-            </Typography>
-            <Box className="flex justify-center md:justify-end gap-4">
-              {[
-                { icon: FaFacebookF, label: "Facebook" },
-                { icon: FaTwitter, label: "Twitter" },
-                { icon: FaInstagram, label: "Instagram" },
-                { icon: FaLinkedinIn, label: "LinkedIn" },
-              ].map((social, index) => (
-                <MuiLink
-                  key={index}
-                  href="#"
-                  aria-label={social.label}
-                  className="bg-white hover:bg-gray-200 text-green-500 p-3 rounded-full shadow-lg transition-all transform hover:scale-110"
-                >
-                  {React.createElement(social.icon, { size: 20 })}
-                </MuiLink>
-              ))}
-            </Box>
-          </Box>
-        </Box>
+        {/* ستون سوم */}
+        <div>
+          <h3 className="text-lg font-bold mb-4">منابع</h3>
+          <ul className="text-sm text-gray-400 space-y-2">
+            <li>مرکز راهنما</li>
+            <li>راهنماهای کاربری</li>
+            <li>بلاگ</li>
+            <li>نظرات کاربران</li>
+            <li>تماس با ما</li>
+          </ul>
+        </div>
 
-        {/* خط جداکننده */}
-        <Divider className="border-gray-400 my-8" />
-
-        {/* بخش پایین */}
-        <Box className="text-center">
-          <Typography
-            variant="body2"
-            className="font-medium text-white"
-          >
-            © 2024 کتابخانه ما. تمامی حقوق محفوظ است.
-          </Typography>
-        </Box>
-      </Box>
-    </Box>
+        {/* ستون چهارم */}
+        <div>
+          <h3 className="text-lg font-bold mb-4">بین‌المللی</h3>
+          <ul className="text-sm text-gray-400 space-y-2">
+            <li>پاکستان</li>
+            <li>استرالیا</li>
+            <li>برزیل</li>
+            <li>کانادا</li>
+            <li>فرانسه</li>
+            <li>هند</li>
+          </ul>
+        </div>
+      </div>
+      <div className="mt-8 text-center text-sm text-gray-400">
+        © 2023 کتاب دات کام. تمامی حقوق محفوظ است.
+      </div>
+    </footer>
   );
 };
 

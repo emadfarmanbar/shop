@@ -62,12 +62,12 @@ const AdminLoginPage = () => {
   return (
     <Box className="flex items-center justify-center h-screen bg-green-50 shadow-lg">
       <Box className="w-5/12">
-        <Image 
-        src="/img/Book.jpg"
-        width={600}
-        height={700}
-        alt="کتابخانه"
-        className="rounded-lg shadow-xl"
+        <Image
+          src="/img/Book.jpg"
+          width={600}
+          height={700}
+          alt="کتابخانه"
+          className="rounded-lg shadow-xl"
         />
       </Box>
       <Box
@@ -79,7 +79,11 @@ const AdminLoginPage = () => {
           borderRadius: "16px",
         }}
       >
-        <Typography variant="h5" align="center" className="text-green-600 font-bold mb-6">
+        <Typography
+          variant="h5"
+          align="center"
+          className="text-green-600 font-bold mb-6"
+        >
           ورود به حساب کاربری
         </Typography>
 
@@ -131,11 +135,12 @@ const AdminLoginPage = () => {
               "& .MuiOutlinedInput-root": {
                 borderRadius: "8px",
                 backgroundColor: "#f1f1f1",
+                paddingLeft: "44px",
               },
             }}
           />
           <Box
-            className="absolute top-3 right-3 cursor-pointer"
+            className="absolute top-4 right-3 cursor-pointer"
             onClick={() => setShowPassword((prev) => !prev)}
           >
             {showPassword ? (
@@ -168,20 +173,27 @@ const AdminLoginPage = () => {
         >
           {loading ? "در حال ورود..." : "ورود"}
         </Button>
+        <div className="flex flex-col gap-5 mt-8">
+          <Typography
+            variant="body2"
+            className="text-gray-500 mt-6 text-center"
+          >
+            رمز خود را فراموش کرده‌اید؟{" "}
+            <a href="#" className="text-green-500 underline">
+              اینجا کلیک کنید
+            </a>
+          </Typography>
 
-        <Typography variant="body2" className="text-gray-500 mt-6 text-center">
-          رمز خود را فراموش کرده‌اید؟{" "}
-          <a href="#" className="text-green-500 underline">
-            اینجا کلیک کنید
-          </a>
-        </Typography>
-
-        <Typography variant="body2" className="text-gray-500 mt-6 text-center">
-          ثبت نام نکرده‌اید؟{" "}
-          <a href="#" className="text-green-500 underline">
-            ساخت حساب
-          </a>
-        </Typography>
+          <Typography
+            variant="body2"
+            className="text-gray-500 mt-6 text-center"
+          >
+            ثبت نام نکرده‌اید؟{" "}
+            <a href="#" className="text-green-500 underline">
+              ساخت حساب
+            </a>
+          </Typography>
+        </div>
       </Box>
     </Box>
   );
